@@ -1,7 +1,7 @@
 SPIR-V NonSemantic Shader DebugInfo Instructions
 ================================================
 
-Version 101
+Version 102
 
 :result_type: pass:normal['Result Type' must be *OpTypeVoid*.]
 :source:      pass:normal['Source' is a *DebugSource* instruction representing the text of the source program]
@@ -61,15 +61,15 @@ Status
 - Last Ratified Version: 100
 - Approved by the SPIR Working Group: 2021-02-05
 - Ratified by the Khronos Group: 2021-03-19
-- Current Version: 101
+- Current Version: 102
 
 Version
 -------
 
 [width="40%",cols="25,25"]
 |========================================
-| Last Modified Date | 2026-04-13
-| Revision           | 101 Rev 2
+| Last Modified Date | 2026-08-28
+| Revision           | 102 Rev 1
 |========================================
 
 Versioning
@@ -134,6 +134,27 @@ Extended instructions in version 101:
 To use version 101 features, import this extended instruction set using:
 
 `OpExtInstImport "NonSemantic.Shader.DebugInfo.101"`
+
+Version 102 Extension
+---------------------
+
+Version 102 of this extended instruction set adds the current working
+directory to <<DebugEntryPoint,*DebugEntryPoint*>>, so that recompiling
+the source files into an equivalent module no longer depends on out-of-band
+knowledge of the directory the compiler ran from.
+
+Extended instructions in version 102:
+
+* <<DebugEntryPoint,*DebugEntryPoint*>> now accepts an optional 'Current
+  Working Directory' parameter giving the compiler's working directory at
+  compilation time. Compiler flags recorded in 'Command-line Arguments'
+  (for example `-I../include`) can be relative to this directory, so
+  without it the recorded command line alone is not enough to reproduce
+  the module.
+
+To use version 102 features, import this extended instruction set using:
+
+`OpExtInstImport "NonSemantic.Shader.DebugInfo.102"`
 
 Introduction
 ------------
@@ -623,9 +644,9 @@ Compilation Unit
 |======
 
 
-[cols="1,4*3"]
+[cols="1,5*3"]
 |======
-5+|[[DebugEntryPoint]]*DebugEntryPoint* +
+6+|[[DebugEntryPoint]]*DebugEntryPoint* +
  +
  Describe the compilation environment for an *OpEntryPoint*. +
  +
@@ -644,12 +665,17 @@ Compilation Unit
  +
  'Command-line Arguments' is an *OpString* containing the command line arguments passed to
  the compiler. +
+ +
+ 'Current Working Directory' (*version 102*) is an optional *OpString* containing the
+ compiler's current working directory at compilation time. Compiler flags in
+ 'Command-line Arguments' that are relative paths are relative to this directory. +
 
 | 107
 | '<id>' 'Entry Point'
 | '<id>' 'Compilation Unit'
 | '<id>' 'Compiler Signature'
 | '<id> Command-line Arguments'
+| Optional '<id> Current Working Directory'
 |======
 
 
@@ -1986,5 +2012,8 @@ Revision History
                                              *DebugTypeBasic* with optional *FPEncoding* +
                                              parameter for specialized floating-point formats.
 |101 Rev 2  |2026-04-13|Spencer Fricke     |Fix binary form view
+|102 Rev 1  |2026-08-28|Diego Novillo      |*Version 102 extension:* Add optional +
+                                            'Current Working Directory' operand to +
+                                            *DebugEntryPoint* (issue #951).
 |========================================================
 
